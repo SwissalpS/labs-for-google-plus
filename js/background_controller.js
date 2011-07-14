@@ -3,7 +3,9 @@
  * @constructor
  */
 BackgroundController = function() {
-  this.onExtensionLoaded();
+
+	console.log('settings loaded');
+//	this.onExtensionLoaded();
 };
 
 /**
@@ -11,36 +13,17 @@ BackgroundController = function() {
  * that happens when chrome loads the extension.
  */
 BackgroundController.prototype.onExtensionLoaded = function() {
-  var currVersion = chrome.app.getDetails().version;
-  var prevVersion = settings.version;
-  if (currVersion != prevVersion) {
-    // Check if we just installed this extension.
-    if (typeof prevVersion == 'undefined') {
-      this.onInstall();
-    } else {
-      this.onUpdate(prevVersion, currVersion);
-    }
-    settings.version = currVersion;
-  }
-};
-
-/**
- * Triggered when the extension just installed.
- */
-BackgroundController.prototype.onInstall = function() {
-  // Inject the content script to all opened window.
-  chrome.windows.getAll({ populate: true }, function(windows) {
-    for (var w = 0; w < windows.length; w++) {
-      var tabs = windows[w].tabs;
-      for (var t = 0; t < tabs.length; t++) {
-        var tab = tabs[t];
-        if (this.isValidURL(tab.url)) {
-          chrome.tabs.executeScript(tab.id, { file: '/js/injection.js',
-                                    allFrames: true });
-        }
-      }
-    }
-  });
+	var currVersion = chrome.app.getDetails().version;
+	var prevVersion = settings.version;
+	if (currVersion != prevVersion) {
+		// Check if we just installed this extension.
+		if (typeof prevVersion == 'undefined') {
+			this.onInstall();
+		} else {
+			this.onUpdate(prevVersion, currVersion);
+		}
+		settings.version = currVersion;
+	}
 };
 
 /**
@@ -49,10 +32,28 @@ BackgroundController.prototype.onInstall = function() {
  * @param {string} url The URL to check.
  */
 BackgroundController.prototype.isValidURL = function(url) {
-  return (url.indexOf('https://plus.google.com') == 0 ||
-      url.indexOf('http://plus.google.com') == 0 ||
-      url.indexOf('https://talkgadget.google.com') == 0 ||
-      url.indexOf('http://talkgadget.google.com') == 0)
+	return (url.indexOf('https://plus.google.com') == 0 ||
+		url.indexOf('http://plus.google.com') == 0 ||
+		url.indexOf('https://talkgadget.google.com') == 0 ||
+		url.indexOf('http://talkgadget.google.com') == 0)
+};
+
+/**
+ * Triggered when the extension just installed.
+ */
+BackgroundController.prototype.onInstall = function() {
+	// Inject the content script to all opened window.
+	chrome.windows.getAll({ populate: true }, function(windows) {
+		for (var w = 0; w < windows.length; w++) {
+			var tabs = windows[w].tabs;
+			for (var t = 0; t < tabs.length; t++) {
+				var tab = tabs[t];
+				if (this.isValidURL(tab.url)) {
+					chrome.tabs.executeScript(tab.id, { file: '/js/injection.js', allFrames: true });
+				}
+			}
+		}
+	});
 };
 
 /**
@@ -68,8 +69,8 @@ BackgroundController.prototype.onUpdate = function(previous, current) {};
  * Initialize the main Background Controller
  */
 BackgroundController.prototype.init = function() {
-  chrome.tabs.onUpdated.addListener(this.onTabUpdated.bind(this));
-  chrome.extension.onRequest.addListener(this.onExtensionRequest.bind(this));
+	chrome.tabs.onUpdated.addListener(this.onTabUpdated.bind(this));
+	chrome.extension.onRequest.addListener(this.onExtensionRequest.bind(this));
 };
 
 /**
@@ -82,12 +83,12 @@ BackgroundController.prototype.init = function() {
                               undefined if there is no response.
  */
 BackgroundController.prototype.onExtensionRequest = function(request, sender, sendResponse) {
-  if (sender.tab && request.method == 'GetModules') {
-    console.log('Content Script requesting data for modules');
-    sendResponse({data: settings.modules});
-  } else {
-    sendResponse({}); // snub
-  }
+	if (sender.tab && request.method == 'GetModules') {
+		console.log('Content Script requesting data for modules');
+		sendResponse({data: settings.modules});
+	} else {
+		sendResponse({}); // snub
+	}
 };
 
 /**
@@ -100,7 +101,7 @@ BackgroundController.prototype.onExtensionRequest = function(request, sender, se
  * @param {object<Tab>} tab The state of the tab that was updated.
  */
 BackgroundController.prototype.onTabUpdated = function(tabId, changeInfo, tab) {
-  if (changeInfo.status == 'complete' && this.isValidURL(tab.url)) {
-    chrome.tabs.sendRequest(tabId, { method: 'render' });
-  }
+	if (changeInfo.status == 'complete' && this.isValidURL(tab.url)) {
+		chrome.tabs.sendRequest(tabId, { method: 'render' });
+	}
 };
