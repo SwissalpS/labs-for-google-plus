@@ -1,14 +1,13 @@
-
 /**
  * Different Google Plus Modules for different Labs Features. These are basically
  * different access sections.
- * 
+ *
  * @enum {Object<number, number>}
  */
 PlusSection = {
-  STREAM     : 1 << 0,
-  PROFILE    : 1 << 1,
-  HANGOUT    : 1 << 2,
+	STREAM     : 1 << 0,
+	PROFILE    : 1 << 1,
+	HANGOUT    : 1 << 2,
 };
 
 /**
@@ -17,7 +16,6 @@ PlusSection = {
  * @param {string} val The enum name as a text.
  * @return {Object<PositionEnum>} the enum value.
  */
-PlusSection.valueOf = function(val)
-{
-  return LabsModule[val.toUpperCase()];
+PlusSection.valueOf = function(val) {
+	return LabsModule[val.toUpperCase()];
 };

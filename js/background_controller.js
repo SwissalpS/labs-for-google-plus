@@ -2,8 +2,7 @@
  * Manages a single instance of the entire application.
  * @constructor
  */
-BackgroundController = function()
-{
+BackgroundController = function() {
   this.onExtensionLoaded();
 };
 
@@ -11,8 +10,7 @@ BackgroundController = function()
  * Triggered when the extension just loaded. Should be the first thing
  * that happens when chrome loads the extension.
  */
-BackgroundController.prototype.onExtensionLoaded = function()
-{
+BackgroundController.prototype.onExtensionLoaded = function() {
   var currVersion = chrome.app.getDetails().version;
   var prevVersion = settings.version;
   if (currVersion != prevVersion) {
@@ -29,15 +27,14 @@ BackgroundController.prototype.onExtensionLoaded = function()
 /**
  * Triggered when the extension just installed.
  */
-BackgroundController.prototype.onInstall = function()
-{
+BackgroundController.prototype.onInstall = function() {
   // Inject the content script to all opened window.
   chrome.windows.getAll({ populate: true }, function(windows) {
     for (var w = 0; w < windows.length; w++) {
       var tabs = windows[w].tabs;
       for (var t = 0; t < tabs.length; t++) {
         var tab = tabs[t];
-        if (this.isValidURL(tab.url)) { 
+        if (this.isValidURL(tab.url)) {
           chrome.tabs.executeScript(tab.id, { file: '/js/injection.js',
                                     allFrames: true });
         }
@@ -51,8 +48,7 @@ BackgroundController.prototype.onInstall = function()
  *
  * @param {string} url The URL to check.
  */
-BackgroundController.prototype.isValidURL = function(url)
-{
+BackgroundController.prototype.isValidURL = function(url) {
   return (url.indexOf('https://plus.google.com') == 0 ||
       url.indexOf('http://plus.google.com') == 0 ||
       url.indexOf('https://talkgadget.google.com') == 0 ||
@@ -66,15 +62,12 @@ BackgroundController.prototype.isValidURL = function(url)
  * @param {string} previous The previous version.
  * @param {string} current  The new version updating to.
  */
-BackgroundController.prototype.onUpdate = function(previous, current)
-{
-};
+BackgroundController.prototype.onUpdate = function(previous, current) {};
 
 /**
  * Initialize the main Background Controller
  */
-BackgroundController.prototype.init = function()
-{
+BackgroundController.prototype.init = function() {
   chrome.tabs.onUpdated.addListener(this.onTabUpdated.bind(this));
   chrome.extension.onRequest.addListener(this.onExtensionRequest.bind(this));
 };
@@ -84,7 +77,7 @@ BackgroundController.prototype.init = function()
  *
  * @param {Object} request The request sent by the calling script.
  * @param {Object<MessageSender>} sender The location where the script has spawned.
- * @param {Function} request Function to call when you have a response. The 
+ * @param {Function} request Function to call when you have a response. The
                               argument should be any JSON-ifiable object, or
                               undefined if there is no response.
  */
@@ -92,8 +85,7 @@ BackgroundController.prototype.onExtensionRequest = function(request, sender, se
   if (sender.tab && request.method == 'GetModules') {
     console.log('Content Script requesting data for modules');
     sendResponse({data: settings.modules});
-  }
-  else {
+  } else {
     sendResponse({}); // snub
   }
 };
@@ -107,8 +99,7 @@ BackgroundController.prototype.onExtensionRequest = function(request, sender, se
  * @param {object} changeInfo lists the changes of the states.
  * @param {object<Tab>} tab The state of the tab that was updated.
  */
-BackgroundController.prototype.onTabUpdated = function(tabId, changeInfo, tab)
-{
+BackgroundController.prototype.onTabUpdated = function(tabId, changeInfo, tab) {
   if (changeInfo.status == 'complete' && this.isValidURL(tab.url)) {
     chrome.tabs.sendRequest(tabId, { method: 'render' });
   }
