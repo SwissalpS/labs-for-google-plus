@@ -5,7 +5,9 @@
 BackgroundController = function() {
 
 	console.log('settings loaded');
-//	this.onExtensionLoaded();
+
+	this.onExtensionLoaded();
+
 };
 
 /**

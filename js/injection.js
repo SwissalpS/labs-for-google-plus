@@ -32,7 +32,7 @@ Injection.prototype.onModulesReceived = function(response) {
     		loadScript(oHead, '/js/' + module + '/content_script.js');
     	}
     }
-    console.log(modules);
+//    console.log(modules);
 
 	// Listen on new external extension requests coming from the extension process.
 	chrome.extension.onRequest.addListener(this.onExtensionRequest.bind(this));
@@ -90,9 +90,11 @@ Injection.prototype.renderItem = function(itemDOM) {
  * @param {Object<MutationEvent>} e modified event.
  */
 Injection.prototype.onNewPost = function(e) {
-	if (e.target.id.indexOf('update') == 0) {
-		this.renderItem(e.target);
-	}
+	if (e.target.id) {
+		if (e.target.id.indexOf('update') == 0) {
+			this.renderItem(e.target);
+		}
+	} // if got e.target.id at all
 };
 
 

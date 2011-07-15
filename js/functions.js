@@ -3,7 +3,7 @@
  * @param {string} id The id.
  */
 function $(id) {
-  return document.getElementById(id);
+	return document.getElementById(id);
 }
 
 /**
@@ -13,7 +13,7 @@ function $(id) {
  * @parma {string} file The file to inject.
  */
 function loadScript(parent, file) {
-  var script = document.createElement('script');
-  script.src = chrome.extension.getURL(file);
-  parent.appendChild(script);
+	var script = document.createElement('script');
+	script.src = chrome.extension.getURL(file);
+	parent.appendChild(script);
 }
