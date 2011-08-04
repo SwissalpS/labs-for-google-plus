@@ -473,8 +473,8 @@ var SssSplusTan = function() {
 
 	// set background colour of choice
 	var myColor = "#f3f1dd";
-	var aSelectors = [".a-U-T", ".a-p-T", ".a-p-A-T", ".a-A", ".a-p-A-xc-zb",
-			".a-p-M-T", ".a-p-M-T-gi-xc", ".a-p-M", ".ni-M", ".a-f-i"];
+	var aSelectors = [/*".a-U-T", ".a-p-T", ".a-p-A-T", ".a-A", ".a-p-A-xc-zb",
+			".a-p-M-T", ".a-p-M-T-gi-xc", ".a-p-M", ".ni-M", ".a-f-i",*/ ".a-n-z-Fb-Ab", ".al", ".a-Yh-M-Fb", ".a-n-M-T-vd-pc", ".a-n-M-T-pi-Fb", ".a-g-Am", ".a-g-za-M", ".a-g-za-vs", ".a-c-n-Hc"];
 
 	document.querySelector('body').style.backgroundColor = myColor;
 
